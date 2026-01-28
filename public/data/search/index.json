@@ -1,0 +1,19 @@
+{
+  "stories": [
+    {
+      "id": "story-001",
+      "title": "Chandni Raat Ka Raaz",
+      "keywords": ["chandni", "raat", "raaz", "priya", "rahul", "romance", "love", "pyaar", "garden", "night"],
+      "tags": ["romance", "desi", "passion", "night"],
+      "category": "antarvasana"
+    },
+    {
+      "id": "story-002",
+      "title": "Sapnon Ki Rani",
+      "keywords": ["sapna", "dreams", "arjun", "meera", "fantasy", "mystery", "college"],
+      "tags": ["fantasy", "dreams", "romance", "mystery"],
+      "category": "fantasy"
+    }
+  ]
+}
+
