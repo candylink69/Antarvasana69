@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "requireAgeConsent": true,
+  "provider": "custom",
+  "positions": {
+    "homeTop": {
+      "enabled": false,
+      "type": "banner",
+      "code": ""
+    },
+    "storyTop": {
+      "enabled": false,
+      "type": "banner",
+      "code": ""
+    },
+    "storyInline": {
+      "enabled": false,
+      "type": "native",
+      "afterParts": 2,
+      "code": ""
+    },
+    "footer": {
+      "enabled": false,
+      "type": "banner",
+      "code": ""
+    }
+  }
+}
+
