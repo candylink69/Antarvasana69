@@ -1,0 +1,10 @@
+{
+  "mode": "static",
+  "apiBaseUrl": "",
+  "endpoints": {
+    "stories": "/api/stories",
+    "categories": "/api/categories",
+    "search": "/api/search"
+  }
+}
+
