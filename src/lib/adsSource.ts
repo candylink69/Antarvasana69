@@ -7,7 +7,7 @@ let cachedAdsConfig: AdsConfig | null = null;
 export async function getAdsConfig(): Promise<AdsConfig> {
   if (!cachedAdsConfig) {
     try {
-      const response = await fetch('/data/config/ads.json');
+      const response = await fetch('public/data/config/ads.json');
       cachedAdsConfig = await response.json();
     } catch {
       // Default config with backward compatibility
