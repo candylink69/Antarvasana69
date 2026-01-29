@@ -3,6 +3,9 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { dataSource } from '@/lib/dataSource';
 import type { StoryMeta } from '@/lib/types';
 import StoryCard from '@/components/StoryCard';
+import AdListBanner from '@/components/ads/AdListBanner';
+import AdSmartLink from '@/components/ads/AdSmartLink';
+import AdStickyBottom from '@/components/ads/AdStickyBottom';
 import SearchBar from '@/components/SearchBar';
 
 const SearchPage = () => {
@@ -49,6 +52,8 @@ const SearchPage = () => {
         </p>
         <div className="mx-auto max-w-xl">
           <SearchBar initialQuery={query} autoFocus />
+          {/* Smart Link Box */}
+            <AdSmartLink />
         </div>
       </header>
 
@@ -76,10 +81,16 @@ const SearchPage = () => {
           {/* Results Grid */}
           {results.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {results.map((story) => (
-                <StoryCard key={story.id} story={story} />
-              ))}
-            </div>
+              {results.map((story, index) => (
+  <div key={story.id}>
+    <StoryCard story={story} />
+    {/* Show ad after every 6 stories */}
+    {(index + 1) % 6 === 0 && (
+      <AdListBanner />
+    )}
+    </div>
+  ))}
+     </div>
           ) : (
             <div className="rounded-lg bg-card p-12 text-center">
               <p className="mb-2 text-lg text-foreground">No stories found</p>
@@ -99,6 +110,8 @@ const SearchPage = () => {
           </p>
         </div>
       )}
+      {/* Sticky Bottom Ad */}
+        <AdStickyBottom />
     </div>
   );
 };
