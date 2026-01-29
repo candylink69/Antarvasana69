@@ -6,6 +6,9 @@ import StoryReader from '@/components/StoryReader';
 import Pagination from '@/components/Pagination';
 import AdStoryTop from '@/components/ads/AdStoryTop';
 import AdStoryInline from '@/components/ads/AdStoryInline';
+import AdSmartLink from '@/components/ads/AdSmartLink';
+import AdStickyBottom from '@/components/ads/AdStickyBottom';
+import AdNativeBanner from '@/components/ads/AdNativeBanner';
 import { ArrowLeft, Calendar, Eye, Tag } from 'lucide-react';
 
 const PARTS_PER_PAGE = 5;
@@ -170,10 +173,13 @@ const StoryPage = () => {
             ))}
           </div>
         </header>
+        {/* Smart Link Box */}
+         <AdSmartLink />
 
         {/* Ad Slot - Story Top */}
         <AdStoryTop />
-
+        {/* Native Banner */}
+         <AdNativeBanner />
         {/* Page Info */}
         {totalPages > 1 && (
           <div className="mb-6 rounded-lg bg-card p-4 text-center">
@@ -225,6 +231,8 @@ const StoryPage = () => {
           </Link>
         </div>
       </div>
+      {/* Sticky Bottom Ad (auto-refreshes every 10 minutes) */}
+      <AdStickyBottom autoRefreshMinutes={10} />
     </div>
   );
 };
