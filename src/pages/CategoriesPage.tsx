@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { dataSource } from '@/lib/dataSource';
 import type { Category } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
+import AdSmartLink from '@/components/ads/AdSmartLink';
+import AdStickyBottom from '@/components/ads/AdStickyBottom';
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -26,6 +28,8 @@ const CategoriesPage = () => {
   return (
     <div className="page-container">
       {/* Header */}
+      {/* Smart Link Box */}
+         <AdSmartLink />
       <header className="mb-12 text-center">
         <h1 className="story-title mb-4 text-3xl font-bold md:text-4xl">
           Browse Categories
@@ -74,6 +78,8 @@ const CategoriesPage = () => {
           Back to Home
         </Link>
       </div>
+      {/* Sticky Bottom Ad */}
+       <AdStickyBottom />
     </div>
   );
 };
