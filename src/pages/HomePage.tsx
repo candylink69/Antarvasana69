@@ -5,6 +5,9 @@ import StoryCard from '@/components/StoryCard';
 import Pagination from '@/components/Pagination';
 import SearchBar from '@/components/SearchBar';
 import AdHomeTop from '@/components/ads/AdHomeTop';
+import AdListBanner from '@/components/ads/AdListBanner';
+import AdSmartLink from '@/components/ads/AdSmartLink';
+import AdStickyBottom from '@/components/ads/AdStickyBottom';
 
 const HomePage = () => {
   const [stories, setStories] = useState<StoryMeta[]>([]);
@@ -46,6 +49,8 @@ const HomePage = () => {
         </p>
         <div className="mx-auto max-w-xl">
           <SearchBar />
+          {/* Smart Link Box */}
+          <AdSmartLink />
         </div>
       </section>
 
@@ -76,9 +81,15 @@ const HomePage = () => {
           </div>
         ) : stories.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {stories.map((story) => (
-              <StoryCard key={story.id} story={story} />
-            ))}
+            {stories.map((story, index) => (
+  <div key={story.id}>
+    <StoryCard story={story} />
+    {/* Show ad after every 6 stories */}
+    {(index + 1) % 6 === 0 && (
+      <AdListBanner />
+    )}
+  </div>
+))}
           </div>
         ) : (
           <div className="rounded-lg bg-card p-12 text-center">
@@ -97,6 +108,8 @@ const HomePage = () => {
           </div>
         )}
       </section>
+      {/* Sticky Bottom Ad */}
+       <AdStickyBottom />
     </div>
   );
 };
