@@ -1,29 +1,73 @@
 {
-  "enabled": false,
+  "enabled": true,
   "requireAgeConsent": true,
   "provider": "custom",
+  "devices": {
+    "desktop": true,
+    "mobile": true
+  },
+  "stickyAds": {
+    "enabled": true,
+    "autoRefreshMinutes": 10,
+    "hideAfterCloseMinutes": 10
+  },
+  "smartLink": {
+    "enabled": true,
+    "text": "pyasi bhabhiyo ki pyas bujani hai kya?🥵 asli mard ho vo yaha 👉🏻 click 👈🏻kare 🤤",
+    "url": "https://your-smart-link.com",
+    "backgroundColor": "#ff3366",
+    "textColor": "#ffffff"
+  },
   "positions": {
     "homeTop": {
-      "enabled": false,
+      "enabled": true,
       "type": "banner",
-      "code": ""
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/DESKTOP_HOME_TOP/invoke.js'></script><div id='container-DESKTOP_HOME_TOP'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/MOBILE_HOME_TOP/invoke.js'></script><div id='container-MOBILE_HOME_TOP'></div>"
     },
     "storyTop": {
-      "enabled": false,
+      "enabled": true,
       "type": "banner",
-      "code": ""
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/DESKTOP_STORY_TOP/invoke.js'></script><div id='container-DESKTOP_STORY_TOP'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/MOBILE_STORY_TOP/invoke.js'></script><div id='container-MOBILE_STORY_TOP'></div>"
     },
     "storyInline": {
-      "enabled": false,
+      "enabled": true,
       "type": "native",
       "afterParts": 2,
-      "code": ""
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/DESKTOP_INLINE/invoke.js'></script><div id='container-DESKTOP_INLINE'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/MOBILE_INLINE/invoke.js'></script><div id='container-MOBILE_INLINE'></div>"
     },
     "footer": {
-      "enabled": false,
+      "enabled": true,
       "type": "banner",
-      "code": ""
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/DESKTOP_FOOTER/invoke.js'></script><div id='container-DESKTOP_FOOTER'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/MOBILE_FOOTER/invoke.js'></script><div id='container-MOBILE_FOOTER'></div>"
+    },
+    "listBanner": {
+      "enabled": true,
+      "type": "banner",
+      "frequency": 6,
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/2c965f65351da4d1daeabd8fe1e6f886/invoke.js'></script><div id='container-2c965f65351da4d1daeabd8fe1e6f886'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/MOBILE_LIST_BANNER/invoke.js'></script><div id='container-MOBILE_LIST_BANNER'></div>"
+    },
+    "stickyBottom": {
+      "enabled": true,
+      "type": "sticky",
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/STICKY_DESKTOP/invoke.js'></script><div id='container-STICKY_DESKTOP'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/STICKY_MOBILE/invoke.js'></script><div id='container-STICKY_MOBILE'></div>"
+    },
+    "smartLink": {
+      "enabled": true,
+      "type": "smartlink",
+      "desktopCode": "<div style='background: linear-gradient(135deg, #ff3366, #ff0066); padding: 15px; border-radius: 10px; text-align: center; color: white; font-family: Arial; margin: 20px 0; box-shadow: 0 4px 12px rgba(255, 51, 102, 0.3); border: 2px solid #ff6699;'><h3 style='margin: 0 0 10px 0; font-size: 22px;'>😈 pyasi bhabhiyo ki pyas bujani hai kya?🥵</h3><p style='margin: 0 0 15px 0; font-size: 18px;'>asli mard ho to yaha 👇🏻 click kare 🤤</p><a href='YOUR_SMART_LINK_URL' target='_blank' style='display: inline-block; background: white; color: #ff3366; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 18px; transition: all 0.3s;'>🔥 CLICK HERE 🔥</a></div>",
+      "mobileCode": "<div style='background: linear-gradient(135deg, #ff3366, #ff0066); padding: 12px; border-radius: 8px; text-align: center; color: white; font-family: Arial; margin: 15px 0; border: 2px solid #ff6699;'><h3 style='margin: 0 0 8px 0; font-size: 18px;'>😈 pyasi bhabhiyo ki pyas bujani hai kya?🥵</h3><p style='margin: 0 0 10px 0; font-size: 16px;'>asli mard ho to yaha 👇🏻 click kare 🤤</p><a href='YOUR_SMART_LINK_URL' target='_blank' style='display: inline-block; background: white; color: #ff3366; padding: 10px 25px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 16px;'>🔥 CLICK HERE 🔥</a></div>"
+    },
+    "nativeBanner": {
+      "enabled": true,
+      "type": "native",
+      "desktopCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/NATIVE_DESKTOP/invoke.js'></script><div id='container-NATIVE_DESKTOP'></div>",
+      "mobileCode": "<script async='async' data-cfasync='false' src='https://pl28597811.effectivegatecpm.com/NATIVE_MOBILE/invoke.js'></script><div id='container-NATIVE_MOBILE'></div>"
     }
   }
 }
-
