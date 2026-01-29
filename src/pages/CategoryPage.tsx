@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { dataSource } from '@/lib/dataSource';
 import type { StoryMeta, Category } from '@/lib/types';
 import StoryCard from '@/components/StoryCard';
+import AdListBanner from '@/components/ads/AdListBanner';
+import AdSmartLink from '@/components/ads/AdSmartLink';
+import AdStickyBottom from '@/components/ads/AdStickyBottom';
 import { ArrowLeft } from 'lucide-react';
 
 const CategoryPage = () => {
@@ -96,14 +99,22 @@ const CategoryPage = () => {
           {stories.length} {stories.length === 1 ? 'story' : 'stories'}
         </div>
       </header>
+      {/* Smart Link Box */}
+        <AdSmartLink />
 
       {/* Stories Grid */}
       {stories.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {stories.map((story) => (
-            <StoryCard key={story.id} story={story} />
-          ))}
-        </div>
+          {stories.map((story, index) => (
+  <div key={story.id}>
+    <StoryCard story={story} />
+    {/* Show ad after every 6 stories */}
+    {(index + 1) % 6 === 0 && (
+      <AdListBanner />
+    )}
+  </div>
+))}
+  </div>
       ) : (
         <div className="rounded-lg bg-card p-12 text-center">
           <p className="text-lg text-muted-foreground">
@@ -114,6 +125,8 @@ const CategoryPage = () => {
           </Link>
         </div>
       )}
+      {/* Sticky Bottom Ad */}
+       <AdStickyBottom />
     </div>
   );
 };
