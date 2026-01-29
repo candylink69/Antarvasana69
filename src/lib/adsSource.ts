@@ -1,6 +1,5 @@
 // src/lib/adsSource.ts
-
-import type { AdsConfig, StickyAdConfig, SmartLinkConfig } from './types';
+import type { AdsConfig, AdPositionConfig } from './types';
 import { hasAgeConsent } from './dataSource';
 
 let cachedAdsConfig: AdsConfig | null = null;
@@ -11,32 +10,22 @@ export async function getAdsConfig(): Promise<AdsConfig> {
       const response = await fetch('/data/config/ads.json');
       cachedAdsConfig = await response.json();
     } catch {
-      // Default config if file doesn't exist
+      // Default config with backward compatibility
       cachedAdsConfig = {
         enabled: false,
         requireAgeConsent: true,
         provider: 'custom',
-        positions: {},
-        devices: {
-          desktop: true,
-          mobile: true
-        },
-        stickyAds: {
-          enabled: true,
-          autoRefreshMinutes: 10,
-          hideAfterCloseMinutes: 10
-        },
-        smartLink: {
-          enabled: true,
-          text: "pyasi bhabhiyo ki pyas bujani hai kya?🥵 asli mard ho vo yaha 👉🏻 click 👈🏻kare 🤤",
-          url: "YOUR_SMART_LINK_URL",
-          backgroundColor: "#ff3366",
-          textColor: "#ffffff"
-        }
+        positions: {}
       };
     }
   }
   return cachedAdsConfig;
+}
+
+// Check if user is on mobile
+export function isMobile(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth <= 768;
 }
 
 export async function shouldShowAd(position: string): Promise<boolean> {
@@ -52,7 +41,7 @@ export async function shouldShowAd(position: string): Promise<boolean> {
   const positionConfig = config.positions[position];
   if (!positionConfig || !positionConfig.enabled) return false;
   
-  // Check device type
+  // Check device type (backward compatible)
   const isMobileDevice = isMobile();
   if (positionConfig.devices) {
     if (isMobileDevice && !positionConfig.devices.mobile) return false;
@@ -62,23 +51,23 @@ export async function shouldShowAd(position: string): Promise<boolean> {
   return true;
 }
 
-// Device detection
-export function isMobile(): boolean {
-  if (typeof window === 'undefined') return false;
-  return window.innerWidth <= 768;
-}
-
+// Backward compatible getAdCode
 export async function getAdCode(position: string): Promise<string | null> {
   const config = await getAdsConfig();
   
   if (!await shouldShowAd(position)) return null;
   
   const positionConfig = config.positions[position];
-  if (!positionConfig || !positionConfig.code) return null;
+  if (!positionConfig) return null;
   
   const isMobileDevice = isMobile();
   
-  // Return device-specific code if available
+  // Backward compatibility: check old 'code' field first
+  if (positionConfig.code && !positionConfig.desktopCode && !positionConfig.mobileCode) {
+    return positionConfig.code;
+  }
+  
+  // New structure: device-specific codes
   if (isMobileDevice && positionConfig.mobileCode) {
     return positionConfig.mobileCode;
   }
@@ -87,42 +76,41 @@ export async function getAdCode(position: string): Promise<string | null> {
     return positionConfig.desktopCode;
   }
   
-  // Fallback to generic code
-  return positionConfig.code;
+  // Fallback to old 'code' field
+  return positionConfig.code || null;
 }
 
-// Specific function for story inline ads
-export async function getStoryInlineAdConfig(): Promise<{
+// For sticky ads with auto-refresh
+export async function getStickyAdConfig(): Promise<{
   enabled: boolean;
-  afterParts: number;
   code: string;
-  mobileCode?: string;
+  autoRefreshMinutes: number;
+  hideAfterCloseMinutes: number;
 } | null> {
   const config = await getAdsConfig();
   
   if (!config.enabled) return null;
   if (config.requireAgeConsent && !hasAgeConsent()) return null;
   
-  const inlineConfig = config.positions['storyInline'];
-  if (!inlineConfig || !inlineConfig.enabled) return null;
+  const stickyConfig = config.positions['stickyBottom'];
+  if (!stickyConfig || !stickyConfig.enabled) return null;
   
-  const isMobileDevice = isMobile();
+  const code = await getAdCode('stickyBottom');
+  if (!code) return null;
   
   return {
     enabled: true,
-    afterParts: inlineConfig.afterParts || 2,
-    code: isMobileDevice && inlineConfig.mobileCode 
-      ? inlineConfig.mobileCode 
-      : (inlineConfig.desktopCode || inlineConfig.code || '')
+    code,
+    autoRefreshMinutes: config.stickyAds?.autoRefreshMinutes || 10,
+    hideAfterCloseMinutes: config.stickyAds?.hideAfterCloseMinutes || 10
   };
 }
 
-// List banner config (every 6 stories)
+// For list banner (every 6 stories)
 export async function getListBannerConfig(): Promise<{
   enabled: boolean;
   frequency: number;
   code: string;
-  mobileCode?: string;
 } | null> {
   const config = await getAdsConfig();
   
@@ -132,41 +120,21 @@ export async function getListBannerConfig(): Promise<{
   const bannerConfig = config.positions['listBanner'];
   if (!bannerConfig || !bannerConfig.enabled) return null;
   
-  const isMobileDevice = isMobile();
+  const code = await getAdCode('listBanner');
+  if (!code) return null;
   
   return {
     enabled: true,
     frequency: bannerConfig.frequency || 6,
-    code: isMobileDevice && bannerConfig.mobileCode 
-      ? bannerConfig.mobileCode 
-      : (bannerConfig.desktopCode || bannerConfig.code || '')
+    code
   };
 }
 
-// Sticky ad config
-export async function getStickyAdConfig(): Promise<StickyAdConfig | null> {
-  const config = await getAdsConfig();
-  
-  if (!config.enabled) return null;
-  if (config.requireAgeConsent && !hasAgeConsent()) return null;
-  
-  const stickyConfig = config.positions['stickyBottom'];
-  if (!stickyConfig || !stickyConfig.enabled) return null;
-  
-  const isMobileDevice = isMobile();
-  
-  return {
-    enabled: true,
-    autoRefreshMinutes: config.stickyAds?.autoRefreshMinutes || 10,
-    hideAfterCloseMinutes: config.stickyAds?.hideAfterCloseMinutes || 10,
-    code: isMobileDevice && stickyConfig.mobileCode 
-      ? stickyConfig.mobileCode 
-      : (stickyConfig.desktopCode || stickyConfig.code || '')
-  };
-}
-
-// Smart link config
-export async function getSmartLinkConfig(): Promise<SmartLinkConfig | null> {
+// For smart link
+export async function getSmartLinkConfig(): Promise<{
+  enabled: boolean;
+  code: string;
+} | null> {
   const config = await getAdsConfig();
   
   if (!config.enabled) return null;
@@ -175,16 +143,40 @@ export async function getSmartLinkConfig(): Promise<SmartLinkConfig | null> {
   const smartConfig = config.positions['smartLink'];
   if (!smartConfig || !smartConfig.enabled) return null;
   
+  const code = await getAdCode('smartLink');
+  if (!code) return null;
+  
   return {
     enabled: true,
-    text: config.smartLink?.text || "pyasi bhabhiyo ki pyas bujani hai kya?🥵 asli mard ho vo yaha 👉🏻 click 👈🏻kare 🤤",
-    url: config.smartLink?.url || "YOUR_SMART_LINK_URL",
-    backgroundColor: config.smartLink?.backgroundColor || "#ff3366",
-    textColor: config.smartLink?.textColor || "#ffffff"
+    code
   };
 }
 
-// Refresh config (useful when settings change)
+// Keep existing function for backward compatibility
+export async function getStoryInlineAdConfig(): Promise<{
+  enabled: boolean;
+  afterParts: number;
+  code: string;
+} | null> {
+  const config = await getAdsConfig();
+  
+  if (!config.enabled) return null;
+  if (config.requireAgeConsent && !hasAgeConsent()) return null;
+  
+  const inlineConfig = config.positions['storyInline'];
+  if (!inlineConfig || !inlineConfig.enabled) return null;
+  
+  const code = await getAdCode('storyInline');
+  if (!code) return null;
+  
+  return {
+    enabled: true,
+    afterParts: inlineConfig.afterParts || 2,
+    code
+  };
+}
+
+// Refresh config
 export function refreshAdsConfig(): void {
   cachedAdsConfig = null;
 }
