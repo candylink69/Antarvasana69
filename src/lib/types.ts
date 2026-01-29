@@ -1,4 +1,6 @@
-// Types for the data layer
+// src/lib/types.ts
+
+// Existing types (unchanged)
 export interface StoryMeta {
   id: string;
   title: string;
@@ -62,17 +64,62 @@ export interface SearchIndex {
   }[];
 }
 
+// UPDATED AdsConfig with new fields
 export interface AdsConfig {
   enabled: boolean;
   requireAgeConsent: boolean;
   provider: string;
   positions: {
-    [key: string]: {
-      enabled: boolean;
-      type: string;
-      code: string;
-      afterParts?: number;
-    };
+    [key: string]: AdPositionConfig;
+  };
+  devices?: {
+    desktop: boolean;
+    mobile: boolean;
+  };
+  stickyAds?: {
+    enabled: boolean;
+    autoRefreshMinutes: number;
+    hideAfterCloseMinutes: number;
+  };
+  smartLink?: {
+    enabled: boolean;
+    text: string;
+    url: string;
+    backgroundColor: string;
+    textColor: string;
   };
 }
 
+// NEW: Detailed ad position config
+export interface AdPositionConfig {
+  enabled: boolean;
+  type?: string;
+  code?: string;
+  desktopCode?: string;
+  mobileCode?: string;
+  devices?: {
+    desktop: boolean;
+    mobile: boolean;
+  };
+  // For list banner
+  frequency?: number;
+  // For story inline
+  afterParts?: number;
+}
+
+// NEW: Sticky ad config
+export interface StickyAdConfig {
+  enabled: boolean;
+  autoRefreshMinutes: number;
+  hideAfterCloseMinutes: number;
+  code: string;
+}
+
+// NEW: Smart link config
+export interface SmartLinkConfig {
+  enabled: boolean;
+  text: string;
+  url: string;
+  backgroundColor: string;
+  textColor: string;
+}
