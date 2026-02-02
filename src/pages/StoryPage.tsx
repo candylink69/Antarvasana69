@@ -72,29 +72,7 @@ const StoryPage = () => {
   loadParts();
 }, [storyId, story, currentPage]);
 
-      setLoading(true);
-      try {
-        const startPart = (currentPage - 1) * PARTS_PER_PAGE + 1;
-        const loadedParts = await dataSource.getStoryParts(
-  storyId,
-  startPart,
-  PARTS_PER_PAGE
-);
-
-if (loadedParts && loadedParts.length > 0) {
-  setParts(loadedParts);
-} else {
-  setParts([]); // prevent stale render
-}
-      } catch (err) {
-        console.error('Failed to load parts:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadParts();
-  }, [storyId, story, currentPage]);
+      
 
   const handlePageChange = (page: number) => {
   if (page < 1 || page > totalPages) return; // 🔥 GUARD
