@@ -49,14 +49,43 @@ const StoryPage = () => {
   }, [storyId]);
 
   useEffect(() => {
-    const loadParts = async () => {
-      if (!storyId || !story) return;
+  if (!storyId || !story) return;
+
+  const loadParts = async () => {
+    setLoading(true);
+    try {
+      const startPart = (currentPage - 1) * PARTS_PER_PAGE + 1;
+      const loadedParts = await dataSource.getStoryParts(
+        storyId,
+        startPart,
+        PARTS_PER_PAGE
+      );
+      setParts(loadedParts ?? []);
+    } catch (err) {
+      console.error('Failed to load parts:', err);
+      setParts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadParts();
+}, [storyId, story, currentPage]);
 
       setLoading(true);
       try {
         const startPart = (currentPage - 1) * PARTS_PER_PAGE + 1;
-        const loadedParts = await dataSource.getStoryParts(storyId, startPart, PARTS_PER_PAGE);
-        setParts(loadedParts);
+        const loadedParts = await dataSource.getStoryParts(
+  storyId,
+  startPart,
+  PARTS_PER_PAGE
+);
+
+if (loadedParts && loadedParts.length > 0) {
+  setParts(loadedParts);
+} else {
+  setParts([]); // prevent stale render
+}
       } catch (err) {
         console.error('Failed to load parts:', err);
       } finally {
@@ -68,9 +97,10 @@ const StoryPage = () => {
   }, [storyId, story, currentPage]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  if (page < 1 || page > totalPages) return; // 🔥 GUARD
+  setCurrentPage(page);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
   if (loading && !story) {
     return (
