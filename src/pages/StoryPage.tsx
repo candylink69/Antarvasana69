@@ -4,12 +4,11 @@ import { dataSource } from '@/lib/dataSource';
 import type { StoryMeta } from '@/lib/types';
 import StoryReader from '@/components/StoryReader';
 import Pagination from '@/components/Pagination';
-import AdStoryTop from '@/components/ads/AdStoryTop';
-import AdStoryInline from '@/components/ads/AdStoryInline';
-import AdSmartLink from '@/components/ads/AdSmartLink';
-import AdStickyBottom from '@/components/ads/AdStickyBottom';
-import AdNativeBanner from '@/components/ads/AdNativeBanner';
 import { ArrowLeft, Calendar, Eye, Tag } from 'lucide-react';
+import SmartLinkBox from '@/components/ads/SmartLinkBox';
+import ResponsiveBanner from '@/components/ads/ResponsiveBanner';
+import NativeBanner from '@/components/ads/NativeBanner';
+import StickyAd from '@/components/ads/StickyAd';
 
 const PARTS_PER_PAGE = 5;
 
@@ -110,6 +109,35 @@ const StoryPage = () => {
 
   const startPartNumber = (currentPage - 1) * PARTS_PER_PAGE + 1;
 
+  // Render story parts with inline ads after every 2 parts
+  const renderPartsWithAds = () => {
+    const elements: JSX.Element[] = [];
+
+    parts.forEach((content, index) => {
+      // Add part
+      elements.push(
+        <StoryReader 
+          key={`part-${index}`}
+          content={content} 
+          partNumber={startPartNumber + index} 
+        />
+      );
+
+      // Add inline banner ad after every 2 parts (not after last part)
+      if ((index + 1) % 2 === 0 && index < parts.length - 1) {
+        elements.push(
+          <ResponsiveBanner 
+            key={`inline-ad-${index}`} 
+            variant="inline" 
+            className="my-8"
+          />
+        );
+      }
+    });
+
+    return elements;
+  };
+
   return (
     <div className="page-container">
       <div className="mx-auto max-w-3xl">
@@ -121,6 +149,12 @@ const StoryPage = () => {
           <ArrowLeft className="h-4 w-4" />
           Back to Stories
         </Link>
+
+        {/* Smart Link Box */}
+        <SmartLinkBox />
+
+        {/* Top Banner */}
+        <ResponsiveBanner className="my-6" />
 
         {/* Story Header */}
         <header className="mb-8">
@@ -173,13 +207,7 @@ const StoryPage = () => {
             ))}
           </div>
         </header>
-        {/* Smart Link Box */}
-         <AdSmartLink />
 
-        {/* Ad Slot - Story Top */}
-        <AdStoryTop />
-        {/* Native Banner */}
-         <AdNativeBanner />
         {/* Page Info */}
         {totalPages > 1 && (
           <div className="mb-6 rounded-lg bg-card p-4 text-center">
@@ -189,7 +217,7 @@ const StoryPage = () => {
           </div>
         )}
 
-        {/* Story Parts */}
+        {/* Story Parts with Inline Ads */}
         <div className="space-y-8">
           {loading ? (
             <div className="animate-pulse space-y-4">
@@ -198,20 +226,12 @@ const StoryPage = () => {
               ))}
             </div>
           ) : (
-            parts.map((content, index) => (
-              <div key={index}>
-                <StoryReader 
-                  content={content} 
-                  partNumber={startPartNumber + index} 
-                />
-                {/* Inline ad after every 2 parts */}
-                {(index + 1) % 2 === 0 && index < parts.length - 1 && (
-                  <AdStoryInline />
-                )}
-              </div>
-            ))
+            renderPartsWithAds()
           )}
         </div>
+
+        {/* Native Banner - once per story page */}
+        <NativeBanner className="my-8" />
 
         {/* Pagination */}
         {totalPages > 1 && (
@@ -224,6 +244,9 @@ const StoryPage = () => {
           </div>
         )}
 
+        {/* Large Banner AFTER pagination/next button */}
+        <ResponsiveBanner variant="large" className="my-8" />
+
         {/* Navigation Links */}
         <div className="mt-12 flex justify-center">
           <Link to="/" className="btn-secondary">
@@ -231,11 +254,12 @@ const StoryPage = () => {
           </Link>
         </div>
       </div>
-      {/* Sticky Bottom Ad (auto-refreshes every 10 minutes) */}
-      <AdStickyBottom autoRefreshMinutes={10} />
+
+      {/* Sticky Ad */}
+      <StickyAd pageName="story" />
     </div>
   );
 };
 
 export default StoryPage;
-
+      
