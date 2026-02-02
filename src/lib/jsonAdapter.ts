@@ -29,13 +29,24 @@ export const jsonAdapter = {
   },
 
   async getCategories(): Promise<Category[]> {
-    const categoryFiles = ['antarvasana', 'fantasy', 'crime', 'sci-fi'];
-    const categories = await Promise.all(
-      categoryFiles.map(slug => 
-        fetchJSON<Category>(`/categories/${slug}.json`).catch(() => null)
-      )
-    );
-    return categories.filter((c): c is Category => c !== null);
+    // Fetch category index dynamically - no hardcoded list
+    try {
+      const response = await fetch(`${BASE_PATH}/categories/index.json`);
+      if (!response.ok) {
+        throw new Error('Category index not found');
+      }
+      const index = await response.json() as { categories: string[] };
+      const categories = await Promise.all(
+        index.categories.map(slug => 
+          fetchJSON<Category>(`/categories/${slug}.json`).catch(() => null)
+        )
+      );
+      return categories.filter((c): c is Category => c !== null);
+    } catch {
+      // Fallback: try common categories if no index exists
+      console.warn('No category index found, using fallback');
+      return [];
+    }
   },
 
   async getCategory(slug: string): Promise<Category | null> {
@@ -105,4 +116,4 @@ export const jsonAdapter = {
     return stories.filter((s): s is StoryMeta => s !== null);
   }
 };
-
+      
